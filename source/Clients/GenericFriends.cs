@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
 using CommonPluginsStores.Models;
 using PlayerActivities.Models;
@@ -147,7 +147,7 @@ namespace PlayerActivities.Clients
         /// </returns>
         protected PlayerFriend BuildPlayerFriend(AccountInfos account, IEnumerable<AccountGameInfos> games = null)
         {
-            games = games ?? StoreApi.GetAccountGamesInfos(account);
+            games = games ?? StoreApi?.GetAccountGamesInfos(account);
 
             return new PlayerFriend
             {

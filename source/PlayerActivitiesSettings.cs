@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared.Plugins;
+using CommonPluginsShared.Plugins;
 using CommonPluginsStores.Models;
 using Playnite.SDK;
 using Playnite.SDK.Data;
@@ -87,9 +87,9 @@ namespace PlayerActivities
         public void EndEdit()
         {
             // StoreAPI intialization
-            PlayerActivities.SteamApi.SaveSettings(Settings.SteamStoreSettings, Settings.PluginState.SteamIsEnabled && Settings.EnableSteamFriends);
-            PlayerActivities.EpicApi.SaveSettings(Settings.EpicStoreSettings, Settings.PluginState.EpicIsEnabled && Settings.EnableEpicFriends);
-            PlayerActivities.GogApi.SaveSettings(Settings.GogStoreSettings, Settings.PluginState.GogIsEnabled && Settings.EnableGogFriends);
+            PlayerActivities.SteamApi?.SaveSettings(Settings.SteamStoreSettings, Settings.PluginState.SteamIsEnabled && Settings.EnableSteamFriends);
+            PlayerActivities.EpicApi?.SaveSettings(Settings.EpicStoreSettings, Settings.PluginState.EpicIsEnabled && Settings.EnableEpicFriends);
+            PlayerActivities.GogApi?.SaveSettings(Settings.GogStoreSettings, Settings.PluginState.GogIsEnabled && Settings.EnableGogFriends);
 
             Plugin.SavePluginSettings(Settings);
             PlayerActivities.PluginDatabase.PluginSettings = this;

@@ -1,19 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4FDF1E89-5BC3-4C72-8FDA-0D580E7A5D5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlayerActivities</RootNamespace>
     <AssemblyName>PlayerActivities</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net462</TargetFramework>
+    <UseWpf>true</UseWpf>
     <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>10.0</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);NU1902;NU1903;MSB3277</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+
+  <!-- In a class library, App.xaml must be a Page, not an ApplicationDefinition -->
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +29,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,405 +38,116 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-Release|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug-Release\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
+
+  <!-- Exclude playnite-plugincommon from default globbing to control inclusions explicitly -->
   <ItemGroup>
-    <Reference Include="AngleSharp, Version=0.9.9.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
-      <HintPath>packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Ardalis.GuardClauses, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Ardalis.GuardClauses.5.0.0\lib\netstandard2.0\Ardalis.GuardClauses.dll</HintPath>
-    </Reference>
-    <Reference Include="FuzzySharp, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\FuzzySharp.2.0.2\lib\net461\FuzzySharp.dll</HintPath>
-    </Reference>
-    <Reference Include="NodaTime, Version=3.2.2.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>packages\NodaTime.3.2.2\lib\netstandard2.0\NodaTime.dll</HintPath>
-    </Reference>
-    <Reference Include="Playnite.SDK, Version=6.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\PlayniteSDK.6.13.0\lib\net462\Playnite.SDK.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Compile Remove="playnite-plugincommon\**" />
+    <Page Remove="playnite-plugincommon\**" />
+    <None Remove="playnite-plugincommon\**" />
+  </ItemGroup>
+
+  <!-- Framework References -->
+  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="SteamKit2, Version=1.8.3.0, Culture=neutral, PublicKeyToken=ed3ce47ed5aad940, processorArchitecture=MSIL">
-      <HintPath>packages\SteamKit2.1.8.3\lib\net45\SteamKit2.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Abstractions, Version=2.1.0.227, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
-      <HintPath>packages\System.IO.Abstractions.2.1.0.227\lib\net40\System.IO.Abstractions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
-    <Reference Include="YamlDotNet, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\YamlDotNet.5.4.0\lib\net45\YamlDotNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
+
+  <!-- NuGet Package References -->
   <ItemGroup>
-    <Compile Include="Clients\GenericFriends.cs" />
-    <Compile Include="Clients\EpicFriends.cs" />
-    <Compile Include="Clients\GogFriends.cs" />
-    <Compile Include="Clients\EaFriends.cs" />
-    <Compile Include="Clients\SteamFriends.cs" />
-    <Compile Include="Controls\HowLongToBeatControl.cs" />
-    <Compile Include="Controls\PluginActivities.xaml.cs">
-      <DependentUpon>PluginActivities.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ScreenshotsVisualizerControl.cs" />
-    <Compile Include="Controls\SuccessStoryControl.cs" />
-    <Compile Include="Models\Activity.cs" />
-    <Compile Include="Models\ActivityList.cs" />
-    <Compile Include="Models\Enumerations\ActivityType.cs" />
-    <Compile Include="Models\FriendsData.cs" />
-    <Compile Include="Models\FriendsDataLoading.cs" />
-    <Compile Include="Models\GameActivity\Activity.cs" />
-    <Compile Include="Models\GameActivity\GameActivities.cs" />
-    <Compile Include="Models\HowLongToBeat\GameHowLongToBeat.cs" />
-    <Compile Include="Models\HowLongToBeat\HltbDataUser.cs" />
-    <Compile Include="Models\HowLongToBeat\HltbUserStats.cs" />
-    <Compile Include="Models\PlayerActivitiesData.cs" />
-    <Compile Include="Models\PlayerActivitiesCollection.cs" />
-    <Compile Include="Models\PlayerFriend.cs" />
-    <Compile Include="Models\PlayerGame.cs" />
-    <Compile Include="Models\PlayerStats.cs" />
-    <Compile Include="Models\ScreenshotsVisualizer\GameScreenshots.cs" />
-    <Compile Include="Models\ScreenshotsVisualizer\Screenshot.cs" />
-    <Compile Include="Models\SuccessStory\Achievements.cs" />
-    <Compile Include="Models\SuccessStory\GameAchievements.cs" />
-    <Compile Include="PlayerActivities.cs" />
-    <Compile Include="PlayerActivitiesSettings.cs" />
+    <PackageReference Include="AngleSharp" Version="0.9.9" />
+    <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0" />
+    <PackageReference Include="FuzzySharp" Version="2.0.2" />
+    <PackageReference Include="NodaTime" Version="3.2.2" />
+    <PackageReference Include="PlayniteSDK" Version="6.13.0" />
+    <PackageReference Include="protobuf-net" Version="2.0.0.668" />
+    <PackageReference Include="SteamKit2" Version="1.8.3" />
+    <PackageReference Include="System.IO.Abstractions" Version="2.1.0.227" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="YamlDotNet" Version="5.4.0" />
+  </ItemGroup>
+
+  <!-- Explicit includes from playnite-plugincommon/CommonPluginsControls -->
+  <ItemGroup>
     <Compile Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml.cs">
       <DependentUpon>TextBlockTrimmed.xaml</DependentUpon>
     </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml.cs">
-      <DependentUpon>NumericBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\SearchBox.xaml.cs">
-      <DependentUpon>SearchBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Epic\PanelView.xaml.cs">
-      <DependentUpon>PanelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Epic\PanelViewModel.cs" />
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Gog\PanelView.xaml.cs">
-      <DependentUpon>PanelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Gog\PanelViewModel.cs" />
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Steam\PanelView.xaml.cs">
-      <DependentUpon>PanelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Steam\PanelViewModel.cs" />
-    <Compile Include="playnite-plugincommon\CommonPluginsControls\Views\OptionsDownloadData.xaml.cs">
-      <DependentUpon>OptionsDownloadData.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\PaTopPanelItem.cs" />
-    <Compile Include="Services\PaViewSidebar.cs" />
-    <Compile Include="Services\PlayerActivitiesDatabase.cs" />
-    <Compile Include="Views\PaFriendDataLoading.xaml.cs">
-      <DependentUpon>PaFriendDataLoading.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PaView.xaml.cs">
-      <DependentUpon>PaView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlayerActivitiesSettingsView.xaml.cs">
-      <DependentUpon>PlayerActivitiesSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="extension.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Localization\LocSource.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Page Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <None Include="Localization\ar_SA.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\cs_CZ.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\de_DE.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\en_US.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\es_ES.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\fa_IR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\fi_FI.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\fr_FR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\hu_HU.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\it_IT.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\ja_JP.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\no_NO.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\pl_PL.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\pt_BR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\pt_PT.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\ru_RU.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\uk_UA.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\zh_CN.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\zh_TW.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Page Include="Controls\PluginActivities.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Localization\bg_BG.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\ca_ES.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\da_DK.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\el_GR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\et_EE.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\gl_ES.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\he_IL.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\hr_HR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\id_ID.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\ko_KR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\lt_LT.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\nl_NL.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\ro_RO.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\sk_SK.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\sr_SP.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\sv_SE.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\tr_TR.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Localization\vi_VN.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Page Include="playnite-plugincommon\CommonPluginsControls\Controls\TextBlockTrimmed.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml.cs">
+      <DependentUpon>NumericBox.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\NumericBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\SearchBox.xaml.cs">
+      <DependentUpon>SearchBox.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\PlayniteControls\SearchBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Epic\PanelView.xaml.cs">
+      <DependentUpon>PanelView.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\Stores\Epic\PanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Epic\PanelViewModel.cs" />
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Gog\PanelView.xaml.cs">
+      <DependentUpon>PanelView.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\Stores\Gog\PanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Gog\PanelViewModel.cs" />
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Steam\PanelView.xaml.cs">
+      <DependentUpon>PanelView.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\Stores\Steam\PanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Stores\Steam\PanelViewModel.cs" />
+    <Compile Include="playnite-plugincommon\CommonPluginsControls\Views\OptionsDownloadData.xaml.cs">
+      <DependentUpon>OptionsDownloadData.xaml</DependentUpon>
+    </Compile>
     <Page Include="playnite-plugincommon\CommonPluginsControls\Views\OptionsDownloadData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PaFriendDataLoading.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PaView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PlayerActivitiesSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
+
+  <!-- Output Assets -->
   <ItemGroup>
-    <None Include="icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="Localization\*.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="extension.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <!-- Project and Shared References -->
   <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="playnite-plugincommon\CommonPluginsResources\CommonPluginsResources.csproj">
-      <Project>{4effe926-9c64-4750-a399-f344710edc09}</Project>
-      <Name>CommonPluginsResources</Name>
-    </ProjectReference>
+    <ProjectReference Include="playnite-plugincommon\CommonPluginsResources\CommonPluginsResources.csproj" />
   </ItemGroup>
   <Import Project="playnite-plugincommon\CommonPlayniteShared\CommonPlayniteShared.projitems" Label="Shared" />
   <Import Project="playnite-plugincommon\CommonPluginsShared\CommonPluginsShared.projitems" Label="Shared" />
   <Import Project="playnite-plugincommon\CommonPluginsStores\CommonPluginsStores.projitems" Label="Shared" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Unpowershell -ExecutionPolicy Unrestricted $(SolutionDir)..\build\build.ps1 -ConfigurationName $(ConfigurationName) -OutDir $(SolutionDir)$(OutDir) -SolutionDir $(SolutionDir)</PostBuildEvent>
-  </PropertyGroup>
 </Project>

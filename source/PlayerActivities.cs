@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using CommonPluginsShared.Controls;
 using CommonPluginsShared.PlayniteExtended;
 using CommonPluginsStores.Epic;
@@ -250,12 +250,13 @@ namespace PlayerActivities
             try
             {
                 PlayerActivitiesData playerActivities = PluginDatabase.Get(args.Game);
-                if (playerActivities.HasFirst())
+                if (args.Game.PlayCount <= 1 && !playerActivities.HasFirst())
                 {
                     playerActivities.Items.Add(new Activity
                     {
                         Type = ActivityType.PlaytimeFirst
                     });
+                    PluginDatabase.AddOrUpdate(playerActivities);
                 }
             }
             catch (Exception ex)
@@ -267,15 +268,15 @@ namespace PlayerActivities
         // Add code to be executed when game is preparing to be started.
         public override void OnGameStopped(OnGameStoppedEventArgs args)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
-                    Thread.Sleep(10000);
+                    await Task.Delay(10000);
                     PlayerActivitiesData playerActivities = PluginDatabase.Get(args.Game);
 
                     // Playtime first
-                    if (args.Game.PlayCount == 1 && playerActivities.Items.Find(x => x.Type == ActivityType.PlaytimeFirst) == null)
+                    if (args.Game.PlayCount == 1 && !playerActivities.HasFirst())
                     {
                         playerActivities.Items.Add(new Activity
                         {
@@ -344,28 +345,33 @@ namespace PlayerActivities
             GogApi = new GogApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
             GogApi.Initialization(PluginDatabase.PluginSettings.Settings.GogStoreSettings, PluginDatabase.PluginSettings.Settings.PluginState.GogIsEnabled && PluginDatabase.PluginSettings.Settings.EnableGogFriends);
 
-            // TODO TEMP
-            _ = SpinWait.SpinUntil(() => PluginDatabase.IsLoaded, -1);
-            string friendsFilePath = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, "PlayerFriends.json");
-            string friendsFilePathNew = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, "FriendsData.json");
-            if (Serialization.TryFromJsonFile(friendsFilePath, out List<PlayerFriend> playerFriends))
+            // Migrate legacy friends file if present (in background)
+            Task.Run(() =>
             {
-                FriendsData friendsData = new FriendsData
+                if (SpinWait.SpinUntil(() => PluginDatabase.IsLoaded, 30000))
                 {
-                    PlayerFriends = playerFriends,
-                    LastUpdate = PluginSettings.Settings.LastFriendsRefresh
-                };
+                    string friendsFilePath = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, "PlayerFriends.json");
+                    string friendsFilePathNew = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, "FriendsData.json");
+                    if (Serialization.TryFromJsonFile(friendsFilePath, out List<PlayerFriend> playerFriends))
+                    {
+                        FriendsData friendsData = new FriendsData
+                        {
+                            PlayerFriends = playerFriends,
+                            LastUpdate = PluginSettings.Settings.LastFriendsRefresh
+                        };
 
-                try
-                {
-                    File.WriteAllText(friendsFilePathNew, Serialization.ToJson(friendsData));
-                    CommonPlayniteShared.Common.FileSystem.DeleteFileSafe(friendsFilePath);
+                        try
+                        {
+                            File.WriteAllText(friendsFilePathNew, Serialization.ToJson(friendsData));
+                            CommonPlayniteShared.Common.FileSystem.DeleteFileSafe(friendsFilePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Common.LogError(ex, false);
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Common.LogError(ex, false);
-                }
-            }
+            });
         }
 
         // Add code to be executed when Playnite is shutting down.

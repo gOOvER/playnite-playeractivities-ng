@@ -1,4 +1,4 @@
-﻿using CommonPluginsShared;
+using CommonPluginsShared;
 using CommonPluginsShared.Collections;
 using CommonPluginsShared.Extensions;
 using PlayerActivities.Models;
@@ -150,7 +150,6 @@ namespace PlayerActivities.Services
             _ = API.Instance.Dialogs.ActivateGlobalProgress((activateGlobalProgress) =>
             {
                 Database.BeginBufferUpdate();
-                Thread.Sleep(5000);
 
                 // Remove existing data
                 if (forced)
@@ -257,7 +256,7 @@ namespace PlayerActivities.Services
 
                             // by goal
                             unlocked += achievements.Count;
-                            ulong progression = (ulong)Math.Ceiling((double)(unlocked * 100 / obj.Items.Count()));
+                            ulong progression = obj.Items.Count() > 0 ? (ulong)Math.Ceiling((double)(unlocked * 100) / obj.Items.Count()) : 0;
 
                             foreach (var goal in achievementsGoals)
                             {
@@ -549,8 +548,13 @@ namespace PlayerActivities.Services
         /// </returns>
         public ObservableCollection<ActivityListGrouped> GetActivitiesData(Guid id)
         {
-            ObservableCollection<ActivityListGrouped> data = GetActivitiesData(false);
-            return new ObservableCollection<ActivityListGrouped>(data.Where(x => x.GameContext.Id == id));
+            PlayerActivitiesData gameData = Get(id);
+            if (gameData == null || !gameData.GameExist)
+            {
+                return new ObservableCollection<ActivityListGrouped>();
+            }
+
+            return ProcessActivities(new[] { gameData }, false);
         }
 
         /// <summary>
@@ -566,16 +570,32 @@ namespace PlayerActivities.Services
         /// </returns>
         public ObservableCollection<ActivityListGrouped> GetActivitiesData(bool grouped = true)
         {
+            return ProcessActivities(Database.Where(x => x.GameExist), grouped);
+        }
+
+        private ObservableCollection<ActivityListGrouped> ProcessActivities(IEnumerable<PlayerActivitiesData> sourceGames, bool grouped)
+        {
             // Step 1: Flatten all activity items from games that exist in the database
-            var activityLists = Database
-                .Where(x => x.GameExist)
-                .SelectMany(x => x.Items.Select(y => new ActivityList
+            var activityLists = sourceGames
+                .SelectMany(x =>
                 {
-                    GameContext = x.Game,
-                    DateActivity = y.DateActivity.Date,
-                    Type = y.Type,
-                    Value = y.Value
-                }))
+                    var items = x.Items.ToList();
+                    var firstPlaytimes = items.Where(y => y.Type == ActivityType.PlaytimeFirst).OrderBy(y => y.DateActivity).ToList();
+                    if (firstPlaytimes.Count > 1)
+                    {
+                        // Deduplicate: retain only the earliest first playtime
+                        items.RemoveAll(y => y.Type == ActivityType.PlaytimeFirst);
+                        items.Add(firstPlaytimes[0]);
+                    }
+
+                    return items.Select(y => new ActivityList
+                    {
+                        GameContext = x.Game,
+                        DateActivity = y.DateActivity.Date,
+                        Type = y.Type,
+                        Value = y.Value
+                    });
+                })
                 .OrderByDescending(x => x.DateActivity)
                 .ToList();
 
@@ -611,6 +631,11 @@ namespace PlayerActivities.Services
 
                 if (existingGroup != null)
                 {
+                    if (activity.Type == ActivityType.PlaytimeFirst && existingGroup.Activities.Any(a => a.Type == ActivityType.PlaytimeFirst))
+                    {
+                        continue;
+                    }
+
                     existingGroup.Activities.Add(new Activity
                     {
                         DateActivity = activity.DateActivity,
