@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [1.2.0] - 2026-10-07
+
 ### Added
 - **Modern SDK-Style Project**: Migrated `PlayerActivities.csproj` to modern SDK-style project format (`Microsoft.NET.Sdk`, `net462`, `UseWpf`, `LangVersion 10.0`, `PackageReference`), removing legacy `packages.config`.
 - **Submodule Direct Integration**: Integrated `playnite-plugincommon` directly into the repository and removed `.gitmodules` to eliminate git submodule friction.

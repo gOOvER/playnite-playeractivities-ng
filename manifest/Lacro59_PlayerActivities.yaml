@@ -66,3 +66,14 @@ Packages:
       - 'Fixed: Incorrect data'
       - 'Fixed: EA data'
       - 'Fixed: Steam data'
+  - Version: 1.2.0
+    RequiredApiVersion: 6.18.0
+    ReleaseDate: 2026-10-07
+    PackageUrl: https://github.com/gOOvER/playnite-playeractivities-ng/releases/download/v1.2.0/playnite-playeractivities-plugin_1_2_0.pext
+    Changelog:
+      - Modern SDK-style project format (.NET 4.6.2, C# 10.0, PackageReference)
+      - Integrated plugincommon directly into repository
+      - Enforced URI scheme validation & process security
+      - UI responsiveness & async enhancements (no UI freezes)
+      - Optimized game selection query performance
+      - Fixed Win32 file handle leak and SteamKit null guards
